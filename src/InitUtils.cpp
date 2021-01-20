@@ -35,9 +35,10 @@ bool InitUtils::init() {
 
 
 InitUtils::InitUtils() {
+	cout << "InitUtils creation." << endl;
 }
 
 InitUtils::~InitUtils() {
-	cout << "InitUtils creation." << endl;
+	cout << "InitUtils destruction" << endl;
 }
 

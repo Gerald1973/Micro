@@ -1,6 +1,6 @@
 //============================================================================
 // Name        : Micro.cpp
-// Author      : Gérald Maréchal
+// Author      : Gï¿½rald Marï¿½chal
 // Version     :
 // Copyright   : 
 // Description : Hello World in C++, Ansi-style
@@ -59,7 +59,6 @@ int main(int argv, char **args) {
 				for (Uint32 c = 0; c < bytesDequeued / 4; c++) {
 					float y = ( buffer[c] / (float) INT32_MAX);
 					y = y * ((float) GlobalConstants::SCREEN_HEIGHT / 2.0);
-					//cout << y << endl;
 					SDL_RenderDrawPoint(renderer, c, y + GlobalConstants::SCREEN_HEIGHT / 2.0);
 				}
 				SDL_RenderPresent(renderer);
