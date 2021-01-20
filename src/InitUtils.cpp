@@ -9,15 +9,14 @@
 
 #include <SDL2/SDL.h>
 #include <iostream>
-#include <iomanip>
 
 using namespace std;
 
 void InitUtils::displayInfoInputSound() {
 	int numberOfCaptureDevices = SDL_GetNumAudioDevices(1);
-	cout << setw(39) << " Capture device name " << endl;
+	cout << " Capture device name " << endl;
 	for (int i = 0; i < numberOfCaptureDevices; i++) {
-		cout << setw(3) << i << ")" << SDL_GetAudioDeviceName(i, 1) << endl;
+		cout << i << ") " << SDL_GetAudioDeviceName(i, 1) << endl;
 	}
 }
 

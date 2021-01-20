@@ -1,6 +1,6 @@
 //============================================================================
 // Name        : Micro.cpp
-// Author      : G�rald Mar�chal
+// Author      : Gérald Maréchal
 // Version     :
 // Copyright   : 
 // Description : Hello World in C++, Ansi-style
@@ -27,9 +27,10 @@ int main(int argv, char **args) {
 	int choice = 0;
 	if (InitUtils::getInstance()->init()) {
 		InitUtils::getInstance()->displayInfoInputSound();
-		cout << "Enter the desired capture device :" << endl;
+		cout << "Enter the desired capture device :";
 		cin >> choice;
 		deviceName = SDL_GetAudioDeviceName(choice, 1);
+		cout << "DEBUG: choice: " << choice << endl;
 		cout << "The selected device is : " << deviceName << endl;
 		int deviceIdIn = SDL_OpenAudioDevice(deviceName.c_str(), SDL_TRUE, &desired, &obtained, 0);
 		if (deviceIdIn == 0) {
