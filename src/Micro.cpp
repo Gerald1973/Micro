@@ -10,6 +10,7 @@
 #include "InitUtils.h"
 #include <SDL2/SDL.h>
 #include <string>
+#include "GlobalConstants.h"
 
 using namespace std;
 
@@ -37,6 +38,8 @@ int main(int argv, char **args) {
 			cout << "ERROR: Can not open the device : " << deviceName.c_str()
 					<< endl;
 		} else {
+			SDL_Window* pWindow = SDL_CreateWindow("Micro", 0, 0, GlobalConstants::SCREEN_WIDTH, GlobalConstants::SCREEN_HEIGHT,
+						SDL_WINDOW_OPENGL | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 			SDL_Event event;
 			bool loop = true;
 			while (loop) {
