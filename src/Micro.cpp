@@ -15,22 +15,13 @@
 
 using namespace std;
 
-/*Thread 1*/
-struct DataThread1 {
-	int deviceIdIn;
-	int deviceIdOut;
-	SDL_AudioSpec desired;
-	int *buffer;
-	Uint32 dequeued;
-};
-
 const int FREQUENCY = 44100;
-const int SAMPLES = 1024;
+const int SAMPLES = 4096;
+const int FRAMES_PER_SECOND = 30;
 int buffer[SAMPLES] = { 0 };
-int dequeued = 0;
+Uint32 dequeued = 0;
 
 static int threadFunction(void *data) {
-	DataThread1 *dataThread1 = (DataThread1*) data;
 	SDL_AudioSpec desired, obtainedIn, obtainedOut;
 	SDL_zero(obtainedIn);
 	SDL_zero(obtainedOut);
@@ -46,24 +37,23 @@ static int threadFunction(void *data) {
 	SDL_PauseAudioDevice(deviceIdIn, SDL_FALSE);
 	while (true) {
 		dequeued = SDL_DequeueAudio(deviceIdIn, buffer, SAMPLES * 4);
-		SDL_QueueAudio(deviceIdOut, buffer, dequeued);
-		dataThread1->buffer = buffer;
-		dataThread1->dequeued = dequeued;
-		SDL_Delay(16);
+		if (dequeued > 0) {
+			SDL_QueueAudio(deviceIdOut, buffer, dequeued);
+		} else {
+			 buffer[SAMPLES] = { 0 };
+		}
+		SDL_Delay(1000 / FRAMES_PER_SECOND);
 	}
 	return 0;
 }
 
 int main(int argv, char **args) {
 	bool cap = true;
-
-	const int FRAMES_PER_SECOND = 20;
 	Timer timer;
 	if (InitUtils::getInstance()->init()) {
 
 		//int buffer[SAMPLES] = {0};
-		DataThread1 *dataThread1 = new DataThread1();
-		SDL_Thread *thread1 = SDL_CreateThread(threadFunction, "TestThread", dataThread1);
+		SDL_Thread *thread1 = SDL_CreateThread(threadFunction, "TestThread", nullptr);
 		SDL_Window *pWindow = SDL_CreateWindow("Micro", 0, 0, GlobalConstants::SCREEN_WIDTH, GlobalConstants::SCREEN_HEIGHT,
 				SDL_WINDOW_OPENGL | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 		SDL_Renderer *renderer = SDL_CreateRenderer(pWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
@@ -87,12 +77,11 @@ int main(int argv, char **args) {
 			float y = 0;
 			float x = 0;
 			const float halfScreen = (float) GlobalConstants::SCREEN_HEIGHT / 2.0;
-			for (Uint32 c = 0; c < dequeued /4; c++) {
-				x = ((float) c / (float) dequeued) * (float) GlobalConstants::SCREEN_WIDTH;
+			for (Uint32 c = 0; c < dequeued/4; c++) {
+				x = ((float) c / ((float) dequeued / 4.0)) * (float) GlobalConstants::SCREEN_WIDTH;
 				y = ((float) buffer[c] / (float) INT32_MAX) * halfScreen;
 				SDL_RenderDrawPointF(renderer, x, y + halfScreen);
 			}
-			SDL_RenderDrawPointF(renderer, 50, 50);
 			SDL_RenderPresent(renderer);
 			frame++;
 			if ((cap == true) && (timer.get_ticks() < 1000 / FRAMES_PER_SECOND)) {
