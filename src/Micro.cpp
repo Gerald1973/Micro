@@ -121,7 +121,6 @@ int main(int argv, char **args) {
 		SDL_Window *pWindow = SDL_CreateWindow("Micro", 0, 0, GlobalConstants::SCREEN_WIDTH, GlobalConstants::SCREEN_HEIGHT,
 				SDL_WINDOW_OPENGL | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 		SDL_Renderer *renderer = SDL_CreateRenderer(pWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_Event event;
 		bool loop = true;
 		float frame = 0;
