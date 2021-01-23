@@ -15,7 +15,7 @@
  * the obtained is initialized to zero.
  */
 SoundData::SoundData() {
-	this->buffer = new int[GlobalConstants::SAMPLES];
+	this->buffer = new short[GlobalConstants::SAMPLES];
 	this->desired = { 0 };
 	this->deviceId = 0;
 	this->obtained = { 0 };
@@ -48,10 +48,10 @@ SDL_AudioSpec SoundData::getObtained() {
 SoundData::~SoundData() {
 }
 
-int* SoundData::getBuffer() {
+short* SoundData::getBuffer() {
 	return this->buffer;
 }
 
-void SoundData::setBuffer(int *buffer) {
+void SoundData::setBuffer(short *buffer) {
 	this->buffer = buffer;
 }

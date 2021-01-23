@@ -4,7 +4,9 @@
 /.project
 /.externalToolBuilders/
 /.settings/
+/.vscode/
 /Debug/
 /Release/
 /dist/
 micro
+.vscode/settings.json

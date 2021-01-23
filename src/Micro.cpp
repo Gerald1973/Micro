@@ -38,15 +38,15 @@ int threadFunction(void *data) {
 	SoundDataInOut *soundDataInOut = (SoundDataInOut*) data;
 	int deviceIdOut = soundDataInOut->soundDataOut->getDeviceId();
 	int deviceIdIn = soundDataInOut->soundDataIn->getDeviceId();
-	int *buffer = soundDataInOut->soundDataIn->getBuffer();
+	short *buffer = soundDataInOut->soundDataIn->getBuffer();
 	SDL_PauseAudioDevice(deviceIdOut, SDL_FALSE);
 	SDL_PauseAudioDevice(deviceIdIn, SDL_FALSE);
 	while (true) {
-		soundDataInOut->dequeued = SDL_DequeueAudio(deviceIdIn, buffer, GlobalConstants::SAMPLES * 4);
+		soundDataInOut->dequeued = SDL_DequeueAudio(deviceIdIn, buffer, GlobalConstants::SAMPLES * sizeof(buffer[0]));
 		if (soundDataInOut->dequeued > 0) {
 			SDL_QueueAudio(deviceIdOut, buffer, soundDataInOut->dequeued);
 		} else {
-			buffer = new int[GlobalConstants::SAMPLES];
+			buffer = new short[GlobalConstants::SAMPLES];
 			soundDataInOut->soundDataIn->setBuffer(buffer);
 		}
 		SDL_Delay(20);
@@ -61,12 +61,12 @@ SoundDataInOut* buildSoundDataInOut() {
 	SDL_AudioSpec obtainedIn = { 0 };
 	SDL_AudioSpec obtainedOut = { 0 };
 	desiredIn.freq = GlobalConstants::FREQUENCY;
-	desiredIn.format = AUDIO_S32SYS;
+	desiredIn.format = AUDIO_S16SYS;
 	desiredIn.channels = 1;
 	desiredIn.samples = GlobalConstants::SAMPLES;
 	desiredIn.callback = nullptr;
 	desiredOut.freq = GlobalConstants::FREQUENCY;
-	desiredOut.format = AUDIO_S32SYS;
+	desiredOut.format = AUDIO_S16SYS;
 	desiredOut.channels = 1;
 	desiredOut.samples = GlobalConstants::SAMPLES;
 	desiredOut.callback = nullptr;
@@ -99,14 +99,14 @@ void draw(SDL_Renderer *renderer, SDL_Window *pWindow, SoundDataInOut *soundData
 	SDL_GetWindowSize(pWindow, &w, &h);
 	const float halfScreen = (float) h / 2.0;
 	Uint32 dequeued = soundDataInOut->dequeued;
-	int *buffer = soundDataInOut->soundDataIn->getBuffer();
-	Uint32 numberOfPoints = dequeued / 4;
+	short *buffer = soundDataInOut->soundDataIn->getBuffer();
+	Uint32 numberOfPoints = dequeued / 2;
 	if (numberOfPoints > 0) {
 		for (Uint32 c = 0; c < numberOfPoints-1; c++) {
 			x1 = ((float) c / ((float) numberOfPoints)) * (float) w;
-			y1 = ((float) buffer[c] / (float) INT32_MAX) * (float) halfScreen;
+			y1 = ((float) buffer[c] / (float) INT16_MAX) * (float) halfScreen;
 			x2 = ((float) (c + 1) / ((float) numberOfPoints)) * (float) w;
-			y2 = ((float) buffer[c+1] / (float) INT32_MAX) * (float) halfScreen;
+			y2 = ((float) buffer[c+1] / (float) INT16_MAX) * (float) halfScreen;
 			SDL_RenderDrawLineF(renderer, x1, y1  + halfScreen, x2, y2  + halfScreen);
 		}
 	}

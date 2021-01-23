@@ -12,20 +12,20 @@
 
 class SoundData {
 public:
-	int* getBuffer();
+	short* getBuffer();
 	Uint32 getDeviceId();
 	void setDeviceId(Uint32 &deviceId);
 	void setDesired(SDL_AudioSpec &desired);
 	SDL_AudioSpec getDesired();
 	void setObtained(SDL_AudioSpec &obtained);
 	SDL_AudioSpec getObtained();
-	void setBuffer(int* buffer);
+	void setBuffer(short* buffer);
 	SoundData();
 	virtual ~SoundData();
 private:
 	SDL_AudioSpec desired, obtained;
 	Uint32 deviceId;
-	int* buffer;
+	short* buffer;
 };
 
 #endif /* SRC_SOUNDDATA_H_ */
