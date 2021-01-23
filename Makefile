@@ -25,6 +25,11 @@ LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2
 
 all: compile
 
+dist:
+	@echo "File sources : $(SRC)"
+	@echo "Target       : $@"
+	$(CXX) $(CXXFLAGS_DIST) $(INCLUDE) -o $(EXE) $(SRC) -O3
+
 compile:
 	@echo "File sources : $(SRC)"
 	@echo "Target       : $@"
@@ -37,12 +42,6 @@ all_windows: clean_windows
 
 clean_windows:
 	rm -f $(EXE).exe
-
-dist:
-	@echo "File sources : $(SRC)"
-	@echo "Target       : $@"
-	$(CXX) $(CXXFLAGS_DIST) $(INCLUDE) -o $(EXE) $(SRC)
-
 
 windows_dist_all: windows_dist_compile
 	mv $(EXE).exe dist

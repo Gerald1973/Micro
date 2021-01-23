@@ -7,7 +7,7 @@
 
 #ifndef SRC_SOUNDDATA_H_
 #define SRC_SOUNDDATA_H_
-#include <SDL2/sdl.h>
+#include <SDL2/SDL.h>
 #include "GlobalConstants.h"
 
 class SoundData {
