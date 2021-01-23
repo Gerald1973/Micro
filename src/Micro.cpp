@@ -104,9 +104,9 @@ void draw(SDL_Renderer *renderer, SDL_Window *pWindow, SoundDataInOut *soundData
 	if (numberOfPoints > 0) {
 		for (Uint32 c = 0; c < numberOfPoints-1; c++) {
 			x1 = ((float) c / ((float) numberOfPoints)) * (float) w;
-			y1 = ((float) buffer[c] / (float) INT32_MAX) * h;
+			y1 = ((float) buffer[c] / (float) INT32_MAX) * (float) halfScreen;
 			x2 = ((float) (c + 1) / ((float) numberOfPoints)) * (float) w;
-			y2 = ((float) buffer[c+1] / (float) INT32_MAX) * h;
+			y2 = ((float) buffer[c+1] / (float) INT32_MAX) * (float) halfScreen;
 			SDL_RenderDrawLineF(renderer, x1, y1  + halfScreen, x2, y2  + halfScreen);
 		}
 	}
