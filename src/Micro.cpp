@@ -16,8 +16,6 @@
 
 using namespace std;
 
-
-
 int toggleFullScreen(SDL_Window *pWindow) {
 	bool result = true;
 	Uint32 fullscreenFlag = SDL_WINDOW_FULLSCREEN_DESKTOP;
@@ -37,10 +35,10 @@ struct SoundDataInOut {
 };
 
 int threadFunction(void *data) {
-	SoundDataInOut* soundDataInOut = (SoundDataInOut*) data;
+	SoundDataInOut *soundDataInOut = (SoundDataInOut*) data;
 	int deviceIdOut = soundDataInOut->soundDataOut->getDeviceId();
 	int deviceIdIn = soundDataInOut->soundDataIn->getDeviceId();
-	int* buffer = soundDataInOut->soundDataIn->getBuffer();
+	int *buffer = soundDataInOut->soundDataIn->getBuffer();
 	SDL_PauseAudioDevice(deviceIdOut, SDL_FALSE);
 	SDL_PauseAudioDevice(deviceIdIn, SDL_FALSE);
 	while (true) {
@@ -90,6 +88,30 @@ SoundDataInOut* buildSoundDataInOut() {
 	return result;
 }
 
+void draw(SDL_Renderer *renderer, SDL_Window *pWindow, SoundDataInOut *soundDataInOut) {
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+	float x1 = 0;
+	float y1 = 0;
+	float x2 = 0;
+	float y2 = 0;
+	int w = 0;
+	int h = 0;
+	SDL_GetWindowSize(pWindow, &w, &h);
+	const float halfScreen = (float) h / 2.0;
+	Uint32 dequeued = soundDataInOut->dequeued;
+	int *buffer = soundDataInOut->soundDataIn->getBuffer();
+	Uint32 numberOfPoints = dequeued / 4;
+	if (numberOfPoints > 0) {
+		for (Uint32 c = 0; c < numberOfPoints-1; c++) {
+			x1 = ((float) c / ((float) numberOfPoints)) * (float) w;
+			y1 = ((float) buffer[c] / (float) INT32_MAX) * h;
+			x2 = ((float) (c + 1) / ((float) numberOfPoints)) * (float) w;
+			y2 = ((float) buffer[c+1] / (float) INT32_MAX) * h;
+			SDL_RenderDrawLineF(renderer, x1, y1  + halfScreen, x2, y2  + halfScreen);
+		}
+	}
+}
+
 int main(int argv, char **args) {
 	bool cap = true;
 	Timer timer;
@@ -120,20 +142,7 @@ int main(int argv, char **args) {
 			}
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 			SDL_RenderClear(renderer);
-			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
-			float y = 0;
-			float x = 0;
-			int w = 0;
-			int h = 0;
-			SDL_GetWindowSize(pWindow, &w, &h);
-			const float halfScreen = (float) h / 2.0;
-			Uint32 dequeued = soundDataInOut->dequeued;
-			int* buffer = soundDataInOut->soundDataIn->getBuffer();
-			for (Uint32 c = 0; c < dequeued / 4; c++) {
-				x = ((float) c / ((float) dequeued / 4.0)) * (float) w;
-				y = ((float) buffer[c] / (float) INT32_MAX) * h;
-				SDL_RenderDrawPointF(renderer, x, y + halfScreen);
-			}
+			draw(renderer, pWindow, soundDataInOut);
 			SDL_RenderPresent(renderer);
 			frame++;
 			if ((cap == true) && (timer.get_ticks() < 1000 / GlobalConstants::FRAMES_PER_SECOND)) {
