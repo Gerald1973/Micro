@@ -96,11 +96,11 @@ int main(int argv, char **args) {
 			}
 		}
 		SDL_DetachThread(thread1);
-		delete soundDataInOut;
-		SDL_DestroyRenderer(renderer);
 		SDL_DestroyWindow(pWindow);
+		SDL_DestroyRenderer(renderer);
 		SDL_Quit();
 		SDLUtils::getInstance()->destroy();
+		delete soundDataInOut;
 	}
 	return 0;
 }
