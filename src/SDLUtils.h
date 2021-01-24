@@ -8,12 +8,12 @@
 #ifndef INITUTILS_H_
 #define INITUTILS_H_
 
-class InitUtils {
+class SDLUtils {
 
 public:
-	static inline InitUtils* getInstance() {
+	static inline SDLUtils* getInstance() {
 		if (!instance) {
-			instance = new InitUtils();
+			instance = new SDLUtils();
 		}
 		return instance;
 	}
@@ -21,16 +21,17 @@ public:
 	static inline void destroy() {
 		if (instance) {
 			delete instance;
-			instance = nullptr;
 		}
 	}
 
+	int toggleFullScreen(SDL_Window *pWindow);
 	void displayInfoInputSound();
 	bool init();
-	virtual ~InitUtils();
+
 private:
-	InitUtils();
-	inline static InitUtils *instance = nullptr;
+	~SDLUtils();
+	SDLUtils();
+	inline static SDLUtils *instance = nullptr;
 };
 
 #endif /* INITUTILS_H_ */

@@ -46,6 +46,7 @@ SDL_AudioSpec SoundData::getObtained() {
 }
 
 SoundData::~SoundData() {
+	delete[] buffer;
 }
 
 short* SoundData::getBuffer() {

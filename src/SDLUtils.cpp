@@ -5,14 +5,13 @@
  *      Author: Papa
  */
 
-#include "InitUtils.h"
-
 #include <SDL2/SDL.h>
 #include <iostream>
+#include "SDLUtils.h"
 
 using namespace std;
 
-void InitUtils::displayInfoInputSound() {
+void SDLUtils::displayInfoInputSound() {
 	int numberOfCaptureDevices = SDL_GetNumAudioDevices(1);
 	cout << " Capture device name " << endl;
 	for (int i = 0; i < numberOfCaptureDevices; i++) {
@@ -20,7 +19,7 @@ void InitUtils::displayInfoInputSound() {
 	}
 }
 
-bool InitUtils::init() {
+bool SDLUtils::init() {
 	int tmp = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 	bool result = false;
 	if (tmp != 0) {
@@ -33,11 +32,23 @@ bool InitUtils::init() {
 
 
 
-InitUtils::InitUtils() {
+SDLUtils::SDLUtils() {
 	cout << "InitUtils creation." << endl;
 }
 
-InitUtils::~InitUtils() {
+SDLUtils::~SDLUtils() {
 	cout << "InitUtils destruction" << endl;
+}
+
+int SDLUtils::toggleFullScreen(SDL_Window *pWindow) {
+	bool result = true;
+	Uint32 fullscreenFlag = SDL_WINDOW_FULLSCREEN_DESKTOP;
+	bool isFullscreen = SDL_GetWindowFlags(pWindow) & fullscreenFlag;
+	int tmp = SDL_SetWindowFullscreen(pWindow, isFullscreen ? 0 : fullscreenFlag);
+	if (tmp < 0) {
+		std::cout << "Error : fullscreen not possible" << std::endl;
+		result = false;
+	}
+	return result;
 }
 
